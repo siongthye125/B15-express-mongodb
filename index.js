@@ -4,6 +4,7 @@ let expressApp = require('express')
 let mongoose = require("mongoose")
 let pro = require("./programming")
 let cors = require("cors")
+const programming = require('./programming')
 
 // create express app
 
@@ -96,9 +97,33 @@ app.post('/youtube/add', (request, response) => {
     console.log(request.body)
     // add or push the value in request.body to videos array
     // the add has to be in JSON format, with double ""
-    videos.push(request.body)
+    // videos.push(request.body)
     // send back the updated videos array as response
-    response.send(videos)
+    // response.send(videos)
+    console.log("before creating instance of programming model and populate")
+    // create instance of programming modile and populate
+    // it with values from request body
+
+let newVideo = new pro({
+    id: request.body.id,
+    title: request.body.title,
+    videoId: request.body.videoId
+})
+console.log("after creating instance of programming model and populate")
+console.log(newVideo)
+// save the newVideo
+newVideo.save()
+.then((data)=>{
+    // console.log(response)
+    response.json({
+        "status":"success",
+        "data":data
+    })
+})
+.catch((error)=>{
+    response.json(error)
+})
+
 })
 
 
